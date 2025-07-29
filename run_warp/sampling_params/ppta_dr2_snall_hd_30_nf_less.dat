@@ -1,0 +1,16 @@
+paramfile_label: allpsr
+datadir: /fred/oz103/ezahraoui/PPTA/ppta_gwb_evidence_2020/data/dr2_timing_20200607
+out: /fred/oz103/ezahraoui/PPTA/ppta_posteriors/HD_less_
+clock: bipm2021
+overwrite: True
+array_analysis: True
+sampler: ptmcmcsampler
+SCAMweight: 30
+AMweight: 15
+nsamp: 3000000
+efac: -1
+equad: -1
+ecorr: -1
+noisefiles: /fred/oz103/ezahraoui/PPTA/ppta_gwb_evidence_2020/data/dr2_timing_20200607/start_noisefiles/snall
+{0}
+noise_model_file: /fred/oz103/ezahraoui/PPTA/run_wrap/noisemodels/ppta_dr2_vanilla_HD_less_param.json

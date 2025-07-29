@@ -1,0 +1,58 @@
+{
+    "model_name": "7_psr_pol_cal_by_band",
+    "universal": {},
+    "common_signals": { "gwb": "pol_dist_30_nfreqs"
+        
+      
+    },
+    "J0711-6830":
+    {
+        "efac": "by_band",
+        "spin_noise": "powerlaw",
+        "dm_noise": "powerlaw_30_nfreqs"
+    },
+    "J1022+1001":
+    {
+        "efac": "by_band",
+        "spin_noise": "powerlaw_30_nfreqs",
+        "dm_noise": "powerlaw_30_nfreqs"
+    },
+    "J1017-7156":
+    {
+        "efac": "by_band",
+        "spin_noise": "powerlaw_30_nfreqs",
+        "chromred": "2.29_30_nfreqs"
+    },
+    "J1446-4701":
+    {
+        "efac": "by_band",
+        "spin_noise": "powerlaw_30_nfreqs",
+        "dm_noise": "powerlaw_30_nfreqs"
+    },
+    "J1730-2304":
+    {
+        "efac": "by_band",
+        "spin_noise": "powerlaw_30_nfreqs",
+        "dm_noise": "powerlaw_30_nfreqs"
+    },
+    "J1832-0836":
+    {
+        "efac": "by_band",
+        "spin_noise": "powerlaw_30_nfreqs",
+        "dm_noise": "powerlaw_30_nfreqs"
+    }
+    ,
+    "J2129-5721":
+    {
+        "efac": "by_band",
+        "spin_noise": "powerlaw_30_nfreqs",
+        "dm_noise": "powerlaw_30_nfreqs"
+    },
+    "J2241-5236":
+    {
+        "efac": "by_band",
+        "spin_noise": "powerlaw_30_nfreqs",
+        "dm_noise": "powerlaw_30_nfreqs"
+    }
+    
+}
