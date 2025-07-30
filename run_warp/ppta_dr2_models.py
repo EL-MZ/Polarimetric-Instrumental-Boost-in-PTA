@@ -263,31 +263,33 @@ class PPTADR2Models(StandardModels):
       else:
         nfreqs = self.determine_nfreqs(sel_func_name=None, common_signal=True)
       print('Number of Fourier frequencies for the GWB/CPL signal: ', nfreqs)
-      if "pol_dist" in option:
-        orf = utils.monopole_orf()
-        log10_A_pol_x = parameter.Uniform(-20, -6)('log10_A_pol_x')
-        log10_A_pol_y = parameter.Uniform(-20, -6)('log10_A_pol_y')
-        log10_A_pol_z = parameter.Uniform(-20, -6)('log10_A_pol_z')
+      # if "pol_dist" in option:
+      #   orf = utils.monopole_orf()
+      #   log10_A_pol_x = parameter.Uniform(-20, -6)('log10_A_pol_x')
+      #   log10_A_pol_y = parameter.Uniform(-20, -6)('log10_A_pol_y')
+      #   log10_A_pol_z = parameter.Uniform(-20, -6)('log10_A_pol_z')
 
-        #gamma_pol = parameter.Uniform(0, 7)('gamma_pol')
-        gamma_pol_x = parameter.Uniform(0, 7)('gamma_pol_x')
-        gamma_pol_y = parameter.Uniform(0, 7)('gamma_pol_y')
-        gamma_pol_z = parameter.Uniform(0, 7)('gamma_pol_z')
+      #   #gamma_pol = parameter.Uniform(0, 7)('gamma_pol')
+      #   gamma_pol_x = parameter.Uniform(0, 7)('gamma_pol_x')
+      #   gamma_pol_y = parameter.Uniform(0, 7)('gamma_pol_y')
+      #   gamma_pol_z = parameter.Uniform(0, 7)('gamma_pol_z')
 
-        # pol (no spatial correlations)
-        cpl_x = utils.powerlaw(log10_A=log10_A_pol_x, gamma=gamma_pol_x)
-        cpl_y = utils.powerlaw(log10_A=log10_A_pol_y, gamma=gamma_pol_y)
-        cpl_z = utils.powerlaw(log10_A=log10_A_pol_z, gamma=gamma_pol_z)
-        pol_x = pol_mod.FourierBasisCommonGP_pol(cpl_x, orf=orf,pol_axis="X", components=nfreqs, Tspan=self.params.Tspan, name='pol_cal_x')
-        pol_y = pol_mod.FourierBasisCommonGP_pol(cpl_y, orf=orf,pol_axis="Y", components=nfreqs, Tspan=self.params.Tspan, name='pol_cal_y')
-        pol_z = pol_mod.FourierBasisCommonGP_pol(cpl_z, orf=orf,pol_axis="Z", components=nfreqs, Tspan=self.params.Tspan, name='pol_cal_z')
-        gwb = pol_x + pol_y + pol_z
-        print('Adding polynomial distortion ORF')
-        gwb_total = gwb_total + gwb if 'gwb_total' in locals() else gwb
-        continue 
-      else:
-        print('No pol_dist GWB/CPL signal added')
-           
+      #   # pol (no spatial correlations)
+      #   cpl_x = utils.powerlaw(log10_A=log10_A_pol_x, gamma=gamma_pol_x)
+      #   cpl_y = utils.powerlaw(log10_A=log10_A_pol_y, gamma=gamma_pol_y)
+      #   cpl_z = utils.powerlaw(log10_A=log10_A_pol_z, gamma=gamma_pol_z)
+      #   pol_x = pol_mod.FourierBasisCommonGP_pol(cpl_x, orf=orf,pol_axis="X", components=nfreqs, Tspan=self.params.Tspan, name='pol_cal_x')
+      #   pol_y = pol_mod.FourierBasisCommonGP_pol(cpl_y, orf=orf,pol_axis="Y", components=nfreqs, Tspan=self.params.Tspan, name='pol_cal_y')
+      #   pol_z = pol_mod.FourierBasisCommonGP_pol(cpl_z, orf=orf,pol_axis="Z", components=nfreqs, Tspan=self.params.Tspan, name='pol_cal_z')
+      #   gwb = pol_x + pol_y + pol_z
+      #   print('Adding polynomial distortion ORF')
+      #   gwb_total = gwb_total + gwb if 'gwb_total' in locals() else gwb
+      #   continue 
+      # else:
+      #   print('No pol_dist GWB/CPL signal added')
+
+      
+
       if "_gamma" in option:
         amp_name = '{}_log10_A'.format(name)
         if (len(optsp) > 1 and 'hd' in option) or ('namehd' in option):
@@ -392,9 +394,18 @@ class PPTADR2Models(StandardModels):
           gwb = gp_signals.FourierBasisCommonGP(gwb_pl, orf, components=nfreqs,
                                                 name=gwname,
                                                 Tspan=self.params.Tspan)
+      elif "pol_dist_selec" in option:
+        print('Adding Pol Selection ORF')
+
+        b_flags = ['10CM','20CM','40CM'] # using ppta data
+        gwb = pol_mod.create_polarization_signals(b_flags,nfreqs=nfreqs,Tspan=self.params.Tspan,log_A_range=(-20, -6),gamma_range=(0, 7),)
+        
+  
       else:
         gwb = gp_signals.FourierBasisGP(gwb_pl, components=nfreqs,
                                         name='gwb', Tspan=self.params.Tspan)
+        
+      
       
       
 

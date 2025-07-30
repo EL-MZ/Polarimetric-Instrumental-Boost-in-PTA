@@ -1,13 +1,14 @@
 import logging
 import itertools
+import functools
 import numpy as np
 
-from enterprise.signals import selections, utils
-from enterprise.signals.selections import Selection
 
-from enterprise.signals import parameter, selections, signal_base, utils
+from enterprise.signals import parameter, selections, signal_base
 from enterprise.signals.selections import Selection
 from enterprise.signals.parameter import function
+from enterprise.signals.utils import KernelMatrix
+import enterprise.signals.utils as utils
 
 # logging.basicConfig(format="%(levelname)s: %(name)s: %(message)s", level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -147,6 +148,61 @@ def createfourierdesignmatrix_red_pol_diag(
     return F, Ffreqs
 
 
+@function
+def createfourierdesignmatrix_red_pol_diag_selec(
+    toas,
+    flags,
+    distort_vect,               # injected automatically
+    pol_axis="X",
+    flagname="B",
+    flagval=None,
+    nmodes=30,
+    Tspan=None,
+    psrTspan=True,
+    logf=False,
+    fmin=None,
+    fmax=None,
+    modes=None,
+    pshift=None,
+    pseed=None,
+):
+    """
+    Construct fourier design matrix with possibility of adding selection and/or chromatic index envelope.
+
+    :param toas: vector of time series in seconds
+    :param freqs: radio frequencies of observations [MHz]
+    :param flags: Flags from timfiles
+    :param nmodes: number of fourier coefficients to use
+    :param Tspan: option to some other Tspan
+    :param psrTspan: option to use pulsar time span. Used only if sub-group of ToAs is chosen
+    :param logf: use log frequency spacing
+    :param fmin: lower sampling frequency
+    :param fmax: upper sampling frequency
+    :param log10_Amp: log10 of the Amplitude [s]
+    :param idx: Index of chromatic effects
+    :param modes: option to provide explicit list or array of
+                  sampling frequencies
+
+    :return: F: fourier design matrix
+    :return: f: Sampling frequencies
+    """
+    if flagval and not psrTspan:
+        sel_toas = toas[np.where(flags[flagname] == flagval)]
+        Tspan = sel_toas.max() - sel_toas.min()
+
+    # get base fourier design matrix and frequencies
+    F, Ffreqs = createfourierdesignmatrix_red_pol_diag(
+        toas,distort_vect=distort_vect,pol_axis=pol_axis, nmodes=nmodes, Tspan=Tspan, logf=logf, fmin=fmin, fmax=fmax, modes=modes, pshift=pshift, pseed=pseed
+    )
+
+
+
+    # compute the mask for the selection
+    if flagval:
+        F *= np.array([flags[flagname] == flagval] * F.shape[1]).T
+
+    return F, Ffreqs
+
 def BasisCommonGP(priorFunction, basisFunction, orfFunction, coefficients=False, combine=True, name=""):
     class BasisCommonGP(signal_base.CommonSignal):
         signal_type = "common basis"
@@ -276,9 +332,12 @@ def BasisCommonGP(priorFunction, basisFunction, orfFunction, coefficients=False,
     return BasisCommonGP
 
 
+
 def FourierBasisCommonGP_pol(
     spectrum,
     orf,
+    flagname="B",
+    flagval=None,
     pol_axis="X",
     coefficients=False,
     combine=True,
@@ -298,8 +357,8 @@ def FourierBasisCommonGP_pol(
             "With coefficients=True, FourierBasisCommonGP " + "requires that you specify Tspan explicitly."
         )
     
-    basis = createfourierdesignmatrix_red_pol_diag(
-        pol_axis=pol_axis,nmodes=components, Tspan=Tspan, logf=logf, fmin=fmin, fmax=fmax, modes=modes, pshift=pshift, pseed=pseed
+    basis = createfourierdesignmatrix_red_pol_diag_selec(
+        pol_axis=pol_axis,flagname=flagname,flagval=flagval,nmodes=components, Tspan=Tspan, logf=logf, fmin=fmin, fmax=fmax, modes=modes, pshift=pshift, pseed=pseed
     )
     BaseClass = BasisCommonGP(spectrum, basis, orf, coefficients=coefficients, combine=combine, name=name)
 
@@ -326,3 +385,87 @@ def FourierBasisCommonGP_pol(
             self._basis, self._labels = self._bases(params=params, Tspan=span)
 
     return FourierBasisCommonGP_pol
+
+
+
+
+def create_polarization_signals(
+    flags,
+    nfreqs=None,
+    Tspan=None,
+    flagname="B",
+    log_A_range=(-20, -6),
+    gamma_range=(0, 7),
+):
+    """
+    Creates a dictionary of polarization signal models for a list of flages.
+
+    For each flag in the list, this function generates 'x', 'y', and 'z'
+    axis components, each with its own amplitude and spectral index parameters.
+    It then combines these into a total signal model.
+
+    :param flages: A list of strings to use as flages for parameter and signal names.
+    :param nfreqs: Number of Fourier components for the signal model.
+    :param Tspan: The time span for the Fourier basis.
+    :param log_A_range: A tuple for the Uniform prior range of log10_A.
+    :param gamma_range: A tuple for the Uniform prior range of gamma.
+
+    :return: A dictionary where keys are 'pol_tot_{flag}' and values are the
+             corresponding combined signal objects.
+    """
+    # This dictionary will store the final combined signals
+    total_signals = []
+    orf = utils.monopole_orf()
+    # Loop through each provided flag (e.g., 'sys1', 'sys2')
+    for flag in flags:
+        axes = []
+        # For each flag, create models for X, Y, and Z axes
+        for axis in ["X", "Y", "Z"]:
+            axis_lower = axis.lower()
+
+            # 1. Dynamically create parameter names with the flag
+            log10_A_name = f"log10_A_pol_{axis_lower}_{flag}"
+            gamma_name = f"gamma_pol_{axis_lower}_{flag}"
+            signal_name = f"pol_cal_{axis_lower}_{flag}"
+
+            # 2. Define the prior parameters for amplitude and spectral index
+            log10_A = parameter.Uniform(*log_A_range)(log10_A_name)
+            gamma = parameter.Uniform(*gamma_range)(gamma_name)
+
+            # 3. Create the power-law spectrum model
+            powerlaw_spectrum = utils.powerlaw(log10_A=log10_A, gamma=gamma)
+
+            # 4. Create the Fourier basis signal for the current axis
+            pol_component = FourierBasisCommonGP_pol(
+                powerlaw_spectrum,
+                orf=orf,
+                flagname=flagname,
+                flagval=flag,
+                pol_axis=axis,
+                components=nfreqs,
+                Tspan=Tspan,
+                name=signal_name,
+            )
+            axes.append(pol_component)
+        if axes:
+            axes_signal = axes[0]
+            for component in axes[1:]:
+                axes_signal += component
+            total_signals.append(axes_signal)
+
+        
+
+    if not total_signals:
+    # Return a neutral value if no suffixes were provided.
+        print("No pol signals generated")
+        return None
+
+    # Initialize the final signal with the first element of the list
+    final_signal = total_signals[0]
+    
+    # Loop through the rest of the signals and add them to the final signal
+    for signal in total_signals[1:]:
+        final_signal += signal
+
+    return final_signal
+

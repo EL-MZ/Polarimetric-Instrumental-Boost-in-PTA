@@ -13,4 +13,4 @@ equad: -1
 ecorr: -1
 noisefiles: /fred/oz103/ezahraoui/PPTA/ppta_gwb_evidence_2020/data/dr2_timing_20200607/start_noisefiles/snall
 {0}
-noise_model_file: /fred/oz103/ezahraoui/PPTA/run_wrap/noisemodels/ppta_dr2_snall_gwb_fixedgamma_30_nf_20210309.json
+noise_model_file: /fred/oz103/ezahraoui/PPTA/run_warp/noisemodels/ppta_dr2_snall_gwb_fixedgamma_30_nf_20210309.json
