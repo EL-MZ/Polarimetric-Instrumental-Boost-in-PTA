@@ -200,7 +200,7 @@ def createfourierdesignmatrix_red_pol_diag_selec(
     # compute the mask for the selection
     if flagval:
         F *= np.array([flags[flagname] == flagval] * F.shape[1]).T
-
+# print(f"for {pol_axis} F Distorted basis: {F}")
     return F, Ffreqs
 
 def BasisCommonGP(priorFunction, basisFunction, orfFunction, coefficients=False, combine=True, name=""):

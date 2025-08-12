@@ -58,5 +58,7 @@ try:
 except:
       print('Informed sample is not possible')
 
-sampler.sample(x0, N, SCAMweight=30, AMweight=15, DEweight=50,thin=30)
+Tmax = 1e8
+
+sampler.sample(x0, N, SCAMweight=30, AMweight=15, DEweight=50,thin=5,writeHotChains=True, Tmax=Tmax)
 
