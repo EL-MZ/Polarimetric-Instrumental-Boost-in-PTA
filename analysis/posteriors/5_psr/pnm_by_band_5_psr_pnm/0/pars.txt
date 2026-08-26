@@ -1,0 +1,16 @@
+J1022+1001_dm_gp_gamma
+J1022+1001_dm_gp_log10_A
+J1022+1001_red_noise_gamma
+J1022+1001_red_noise_log10_A
+J1600-3053_dm_gp_gamma
+J1600-3053_dm_gp_log10_A
+J1744-1134_dm_gp_gamma
+J1744-1134_dm_gp_log10_A
+J1744-1134_red_noise_gamma
+J1744-1134_red_noise_log10_A
+J1909-3744_dm_gp_gamma
+J1909-3744_dm_gp_log10_A
+J1909-3744_red_noise_gamma
+J1909-3744_red_noise_log10_A
+J2129-5721_dm_gp_gamma
+J2129-5721_dm_gp_log10_A

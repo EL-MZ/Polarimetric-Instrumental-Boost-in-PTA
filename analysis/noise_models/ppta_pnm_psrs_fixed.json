@@ -1,0 +1,102 @@
+{
+    "model_name": "pnm_by_band",
+    "universal": {},
+    "common_signals": {}
+    ,
+    "J0711-6830":
+    {
+        "efac": "by_band",
+        "ecorr": "by_band",
+        "spin_noise": "powerlaw_30_nfreqs",
+        "dm_noise": "powerlaw_30_nfreqs"
+    },
+    "J1022+1001":
+    {
+        "efac": "by_band",
+        "ecorr": "by_band",
+        "spin_noise": "powerlaw_30_nfreqs",
+        "dm_noise": "powerlaw_30_nfreqs"
+    },
+    "J1024-0719":
+    {
+        "efac": "by_band",
+        "ecorr": "by_band",
+        "dm_noise": "powerlaw_30_nfreqs"
+    },
+    "J1045-4509": {
+        "efac": "by_band",
+        "ecorr": "by_band",
+        "chromred": "1.82_30_nfreqs",
+        "spin_noise": "powerlaw_30_nfreqs"
+    }
+    ,
+    "J1600-3053":
+    {
+        "efac": "by_band",
+        "ecorr": "by_band",
+        "dm_noise": "powerlaw_30_nfreqs"
+    },
+    "J1643-1224": {
+        "efac": "by_band",
+        "ecorr": "by_band",
+        "j1643_event": "exp_dip",
+        "spin_noise": "powerlaw_30_nfreqs",
+        "dm_noise": "powerlaw_30_nfreqs"
+    }
+    ,
+    "J1744-1134":
+    {
+        "efac": "by_band",
+        "ecorr": "by_band",
+        "spin_noise": "powerlaw_30_nfreqs",
+        "dm_noise": "powerlaw_30_nfreqs"
+    },
+
+    "J1824-2452A":
+    {
+        "efac": "by_band",
+        "ecorr": "by_band",
+        "spin_noise": "powerlaw_30_nfreqs",
+        "dm_noise": "powerlaw_30_nfreqs"
+    }
+    ,
+    "J1909-3744":
+    {
+        "efac": "by_band",
+        "equad": "by_band",
+        "ecorr": "by_band",
+        "spin_noise": "powerlaw_30_nfreqs",
+        "dm_noise": "powerlaw_30_nfreqs"
+    }
+    ,
+    "J1939+2134":
+    {
+        "efac": "by_band",
+        "equad": "by_band",
+        "ecorr": "by_band",
+        "spin_noise": "powerlaw_30_nfreqs",
+        "dm_noise": "powerlaw_30_nfreqs"
+    }
+    ,
+    "J2124-3358":
+    {
+        "efac": "by_band",
+        "ecorr": "by_band",
+        "spin_noise": "powerlaw_30_nfreqs"
+    }
+    ,
+    "J2129-5721":
+    {
+        "efac": "by_band",
+        "ecorr": "by_band",
+        "dm_noise": "powerlaw_30_nfreqs"
+    }
+    ,
+    "J2145-0750": {
+        "efac": "by_band",
+        "ecorr": "by_band",
+        "j2145_event": "exp_dip",
+        "spin_noise": "powerlaw_30_nfreqs",
+        "dm_noise": "powerlaw_30_nfreqs"
+    }
+}
