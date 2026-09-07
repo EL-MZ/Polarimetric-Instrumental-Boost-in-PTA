@@ -309,8 +309,8 @@ class Params(object):
       self.fref = 1400 # MHz
       print('Setting reference radio frequency to 1400 MHz')
     if 'hand' not in self.__dict__:
-      self.hand = 'right'
-      print('Setting default parallactic angle projection to right-handed')
+      self.hand = 'plus'
+      print('Setting default parallactic angle projection to plus-handed')
     if 'mcmc_covm_csv' in self.__dict__ and os.path.isfile(self.mcmc_covm_csv):
       print('MCMC jump covariance matrix is available')
       self.__dict__['mcmc_covm'] = pd.read_csv(self.mcmc_covm_csv, index_col=0)
@@ -741,7 +741,7 @@ def read_tim(tim_file_name, column=1):
 #             else np.empty((0,))  # adjust shape if you know the number of columns
 #         )
 
-def attach_deltas(psrs, global_delta,hand='right', pa_path=None, project=False):
+def attach_deltas(psrs, global_delta,hand='plus', pa_path=None, project=False):
     """
     Loop over a list of enterprise.Pulsar objects and attach
     backend-specific Δ-vectors.
@@ -749,7 +749,7 @@ def attach_deltas(psrs, global_delta,hand='right', pa_path=None, project=False):
     Parameters:
     - psrs: list of enterprise.Pulsar objects
     - global_delta: dictionary containing base delta vectors
-    - hand: string, either 'right' or 'left', indicating the handedness of the projection
+    - hand: string, either 'plus' or 'minus', indicating the handedness of the projection
     - pa_path: path to a file containing parallactic angles
     - project: boolean, if True applies the parallactic angle projection directly
     """
@@ -778,12 +778,12 @@ def attach_deltas(psrs, global_delta,hand='right', pa_path=None, project=False):
             if pa_path is not None:
                 pa = np.loadtxt(f"{pa_path}{psr.name}.ang")[:,1]
                 pa = np.radians(pa)
-                if hand == 'left':
-                    theta = -pa  # Negate for left-handed projection
-                    print(f"Using left-handed projection for pulsar {psr.name}")
+                if hand == 'minus':
+                    theta = -pa  # Negate for minus-handed projection
+                    print(f"Using minus-handed projection for pulsar {psr.name}")
                 else:
                   theta = pa  # Convert degrees to radians
-                  print(f"Using right-handed projection for pulsar {psr.name}")
+                  print(f"Using plus-handed projection for pulsar {psr.name}")
             else:
                 print(f"No parallactic angle path provided for pulsar {psr.name}. Skipping projection.")
 
@@ -797,8 +797,8 @@ def attach_deltas(psrs, global_delta,hand='right', pa_path=None, project=False):
             dz = delta_array[:, 2]
             
             # Compute the projected components directly
-            dx_proj = dx * cos_2t - dy * sin_2t
-            dy_proj = dx * sin_2t + dy * cos_2t
+            dx_proj = dx * cos_2t + dy * sin_2t
+            dy_proj =  dy * cos_2t - dx * sin_2t 
             dz_proj = dz  # Z-component remains unchanged
             
             # Stack the projected components back into the (N_toas, 3) format
