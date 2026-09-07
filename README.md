@@ -8,6 +8,10 @@ multiplies an X, Y, or Z Fourier basis by a three-component instrumental
 distortion vector for every time of arrival (TOA), optionally projected using
 the parallactic angle.
 
+![Polarization model results for PSR J1909-3744](analysis/results/pnm_pol_J1909_3744.svg)
+
+![Polarization reconstruction for PSR J1909-3744](analysis/results/pol_reco_J1909-3744.svg)
+
 ## Important: attach the deltas first
 
 Every `enterprise.Pulsar` must have its per-TOA distortion vectors attached as
