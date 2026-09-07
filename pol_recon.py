@@ -2317,7 +2317,7 @@ def plot_pol_xyz_total(
         )
 
         if handles:
-            ax.legend(handles, labels, loc="best", ncol=3)
+            ax.legend(handles, labels, loc="best", ncol=3,fontsize=18)
 
     axes[-1].set_xlabel("MJD")
 
@@ -3658,9 +3658,9 @@ def plot_total_pol_delay_by_band(
     )
     ax.set_xlabel("MJD")
     if quantity == "delay":
-        ax.set_ylabel(r"$\mathrm{PIB}^{-}$ delay ($\mu$s)")
+        ax.set_ylabel(r"$\mathrm{PIB}^{+}$ delay ($\mu$s)")
     else:
-        ax.set_ylabel(r"Total $\mathrm{PIB}^{-}$ $|\mathbf{b}(t)|$")
+        ax.set_ylabel(r"Total $\mathrm{PIB}^{+}$ $|\mathbf{b}(t)|$")
     ax.grid(True, color="0.88", linewidth=0.7, alpha=0.65)
 
     if ylim is not None:
@@ -4281,7 +4281,7 @@ def plot_total_pol_delay_sum_across_bands(
             zorder=3,
         )
 
-    total_label = r"$\mathrm{PIB}^{-}$"
+    total_label = r"$\mathrm{PIB}^{+}$"
 
     ax.plot(
         common_mjd,
@@ -4293,8 +4293,9 @@ def plot_total_pol_delay_sum_across_bands(
     )
 
     process_labels = {
-        "rn": "Red noise",
-        "dm": f"DM GP ({float(dm_frequency_mhz):g} MHz)",
+        "rn": "RN",
+        # "dm": f"DM GP ({float(dm_frequency_mhz):g} MHz)",
+        "dm": f"DMv",
         "gw": "GWB (HD)",
     }
 
