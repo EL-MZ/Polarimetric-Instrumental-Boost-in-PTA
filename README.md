@@ -70,7 +70,7 @@ attach_deltas(
     psrs,
     global_delta,
     pa_path=str(root / "analysis" / "data_dr2_23") + "/",
-    hand="left",       # or "right"
+    hand="minus",       # or "plus"
     project=True,
 )
 
