@@ -1,4 +1,4 @@
-# PPTA polarization-calibration model
+# Polarimetric-Instrumental-Boost-in-PTA
 
 This repository implements a polarization-calibration Gaussian-process model
 for PPTA timing data using
